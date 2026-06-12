@@ -2,10 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require('path');
 const Budget = require('./models/Budget');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3006;
 
 app.use(cors());
 app.use(express.json());
@@ -14,7 +15,6 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
-// Get budget by sessionId
 app.get('/api/budget/:sessionId', async (req, res) => {
   try {
     const budget = await Budget.findOne({ sessionId: req.params.sessionId });
@@ -27,7 +27,6 @@ app.get('/api/budget/:sessionId', async (req, res) => {
   }
 });
 
-// Save/update full budget state
 app.post('/api/budget/:sessionId', async (req, res) => {
   try {
     const { income, expenses, savingsGoal, currency } = req.body;
@@ -42,4 +41,11 @@ app.post('/api/budget/:sessionId', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Serve built frontend
+const distPath = path.join(__dirname, '../dist');
+app.use(express.static(distPath));
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(distPath, 'index.html'));
+});
+
+app.listen(PORT, () => console.log(`App running on http://localhost:${PORT}`));
