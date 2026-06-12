@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Expense, ExpenseCategory, EXPENSE_CATEGORIES } from '../types';
 
-interface Props {
-  onAdd: (expense: Expense) => void;
-}
+interface Props { onAdd: (expense: Expense) => void }
 
 export default function ExpenseForm({ onAdd }: Props) {
   const [name, setName] = useState('');
@@ -14,54 +12,48 @@ export default function ExpenseForm({ onAdd }: Props) {
     e.preventDefault();
     const amt = parseFloat(amount);
     if (!name.trim() || isNaN(amt) || amt <= 0) return;
-
-    onAdd({
-      id: crypto.randomUUID(),
-      name: name.trim(),
-      amount: amt,
-      category,
-    });
-
+    onAdd({ id: crypto.randomUUID(), name: name.trim(), amount: amt, category });
     setName('');
     setAmount('');
   };
 
   return (
-    <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h3 className="font-semibold text-gray-800 mb-4">Add Expense</h3>
+    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+      <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <span className="text-xl">➕</span> Add Expense
+      </h3>
       <form onSubmit={handleSubmit} className="space-y-3">
-        <div className="grid grid-cols-2 gap-3">
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Expense name"
-            className="col-span-2 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
-          />
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Expense name (e.g. Rent)"
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+        />
+        <div className="flex gap-2">
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value as ExpenseCategory)}
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="flex-1 border border-gray-200 rounded-xl px-3 py-3 text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-300"
           >
-            {EXPENSE_CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
+            {EXPENSE_CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
           <input
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="Amount"
+            inputMode="decimal"
             min="0"
             step="0.01"
-            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="w-28 border border-gray-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
           />
         </div>
         <button
           type="submit"
-          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+          className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
         >
-          + Add Expense
+          Add Expense
         </button>
       </form>
     </div>
