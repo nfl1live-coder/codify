@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:server": "node --watch server/index.js",
+    "dev:server": "php -S 0.0.0.0:3006 api/router.php",
     "dev:all": "concurrently -n \"frontend,backend\" -c \"cyan,yellow\" \"npm run dev\" \"npm run dev:server\"",
     "build": "tsc && vite build",
-    "start": "node server/index.js"
+    "start": "php -S 0.0.0.0:${PORT:-3006} api/router.php"
   },
   "dependencies": {
     "react": "^18.2.0",
